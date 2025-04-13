@@ -1,0 +1,96 @@
+body {
+   
+    margin: 0;
+    padding: 0;
+    
+}
+   
+main {
+    margin: 2rem auto;
+    max-width: 600px;
+    background: hsl(3, 93%, 59%);
+    padding: 2rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+h1, h2 {
+    margin-bottom: 1rem;
+    font-size: 50px;
+}
+
+.form-section {
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+    font-size: xx-large;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+input, select, button {
+    width: 100%;
+    padding: 0.8rem;
+    margin: 0.2rem 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    background-color:hsl(3, 93%, 59%);;
+    color: rgb(10, 1, 1);
+    border: none;
+    cursor: pointer;
+    font-size: larger;
+    font-weight: 500;
+}
+
+button:hover {
+    background-color: #eef0f1;
+}
+
+.result-section {
+    display: none;
+    background: #e9f7ef;
+    padding: 1rem;
+    border: 1px solid #28a745;
+    border-radius: 8px;
+}
+header {
+    position: relative;
+    height: 300px; /* Adjust as needed */
+    background-image: url('images/header-airplane.jpg'); /* Replace with your image URL */
+    background-size: cover;
+    background-position: center;
+    color: white; /* Text color */
+    
+}
+
+.header-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center; /* Centers text horizontally */
+    align-items: center; /* Centers text vertically */
+    background: rgba(0, 0, 0, 0.5); /* Adds a semi-transparent overlay for better text readability */
+    text-align: center;
+}
+
+h1 {
+    margin: 0;
+    font-size: 6.5rem; /* Adjust font size as needed */
+    font-family: Arial, sans-serif;
+    color: #ee630759;
+    text-shadow: 1px 1px 0 #000,
+    1px 1px 0 #000,
+    1px -1px 0 #000,
+    -1px -1px 0 #000;;
+}

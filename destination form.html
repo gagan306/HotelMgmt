@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Destination Form</title>
+    <link rel="stylesheet" href="desti.css" />
+</head>
+<body>
+    <div class="destination-form-container">
+        <h2>Add Destination</h2>
+        <form id="destinationForm">
+            <label for="destination-name">Destination Name:</label>
+            <input type="text" id="destination-name" name="destinationName" required />
+
+            <button type="submit" id="add-button">Add</button>
+        </form>
+    </div>
+</body>
+  <script>// Function to open the dialog box
+    function openDialog() {
+        document.getElementById('destination-dialog').classList.remove('hidden');
+    }
+    
+    // Function to close the dialog box
+    function closeDialog() {
+        document.getElementById('destination-dialog').classList.add('hidden');
+    }
+    
+    // Handle form submission
+    document.getElementById('destinationForm').addEventListener('submit', function (e) {
+        e.preventDefault(); // Prevent form submission for now
+        alert('Destination Added!'); // Replace with your form handling logic
+        closeDialog(); // Close the dialog box after submission
+    });
+    </script>
+</html>

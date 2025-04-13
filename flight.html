@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel and Flight Booking</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Travel and Stay</h1>
+        <nav>
+            <ul>
+                <li><a href="#hotel-booking">Hotel Booking</a></li>
+                <li><a href="#flight-booking">Flight Booking</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hotel Booking Section -->
+        <section id="hotel-booking">
+            <h2>Book a Hotel</h2>
+            <form action="/book-hotel" method="post">
+                <label for="destination">Destination:</label>
+                <input type="text" id="destination" name="destination" required>
+
+                <label for="check-in">Check-in Date:</label>
+                <input type="date" id="check-in" name="check-in" required>
+
+                <label for="check-out">Check-out Date:</label>
+                <input type="date" id="check-out" name="check-out" required>
+
+                <label for="guests">Guests:</label>
+                <select id="guests" name="guests" required>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5+</option>
+                </select>
+
+                <button type="submit">Search Hotels</button>
+            </form>
+        </section>
+
+        <!-- Flight Booking Section -->
+        <section id="flight-booking">
+            <h2>Book a Flight</h2>
+            <form action="/book-flight" method="post">
+                <label for="from">From:</label>
+                <input type="text" id="from" name="from" placeholder="City or Airport" required>
+
+                <label for="to">To:</label>
+                <input type="text" id="to" name="to" placeholder="City or Airport" required>
+
+                <label for="departure">Departure Date:</label>
+                <input type="date" id="departure" name="departure" required>
+
+                <label for="return">Return Date (optional):</label>
+                <input type="date" id="return" name="return">
+
+                <label for="passengers">Passengers:</label>
+                <select id="passengers" name="passengers" required>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5+</option>
+                </select>
+
+                <button type="submit">Search Flights</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Travel and Stay. All rights reserved.</p>
+    </footer>
+</body>
+</html>

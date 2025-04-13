@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Website Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <a href="#"><img src="logo.jpg" alt="logo"></a>
+            </div>
+        </div>
+    </header>
+    
+    <div class="dashboard">
+        <!-- Sidebar (left side) -->
+        <aside class="sidebar">
+            <nav>
+                <ul>
+                    <li><a href="#user">User</a></li>
+                    <li><a href="#destinations">Destinations</a></li>
+                    <li><a href="#hotels">Hotels</a></li>
+                    <li><a href="#logout">Logout</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Main content area (right side) -->
+        <main class="main-content">
+            <section id="home">
+                <h2>Welcome to the Dashboard</h2>
+            </section>
+
+            <section id="destinations">
+                <h2>Destinations</h2>
+                <div class="destination-actions">
+                    <button onclick="openDestinationDialog()">Add Destination</button>
+                </div>
+
+                <!-- Dialog Box for Destination -->
+                <div id="destination-dialog" class="destination-form-container hidden">
+                    <div class="dialog-header">
+                        <h2>Add Destination</h2>
+                        <button class="close-btn" onclick="closeDestinationDialog()">X</button>
+                    </div>
+                    <form id="destinationForm">
+                        <label for="destination-name">Destination Name:</label>
+                        <input type="text" id="destination_name" name="destination_Name" required />
+
+                        <button type="submit" id="add-button">Add</button>
+                    </form>
+                </div>
+
+                <table class="destination-table">
+                    <thead>
+                        <tr>
+                            <th>S.N.</th>
+                            <th>Name</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="destination-table-body">
+                        <!-- Dynamic rows will be inserted here -->
+                    </tbody>
+                </table>
+            </section>
+
+            <section id="hotels">
+                <h2>Hotels</h2>
+                <div class="hotel-actions">
+                    <button onclick="openHotelDialog()">Add Hotel</button>
+                </div>
+
+                <!-- Dialog Box for Hotel -->
+                <div id="hotel-dialog" class="hidden">
+                    <form id="hotelForm">
+                        <input type="hidden" id="hotel-id">
+
+                        <label for="hotel_name">Hotel Name:</label>
+                        <input type="text" id="hotel_name" name="hotel_name" required>
+
+                        <label for="city">City:</label>
+                        <select id="city" name="city" required>
+                            <option value="">Select a city</option>
+                            <!-- Cities will be populated here -->
+                        </select>
+
+                        <label for="address">Address:</label>
+                        <input type="text" id="address" name="address" required>
+
+                        <label for="price">Price:</label>
+                        <input type="number" id="price" name="price" required>
+
+                        <button type="submit">Add Hotel</button>
+                        <button type="button" onclick="closeHotelDialog()">Close</button>
+                    </form>
+                </div>
+
+                <table class="hotel-table">
+                    <thead>
+                        <tr>
+                            <th>S.N.</th>
+                            <th>Name</th>
+                            <th>Address</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Dynamic rows will be inserted here -->
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+
+    <footer>
+        <div class="social-icons">
+            <a href="https://www.facebook.com/" target="_blank"><i class="fab fa-facebook"></i></a>
+            <a href="https://www.twitter.com/" target="_blank"><i class="fab fa-twitter"></i></a>
+            <a href="https://www.instagram.com/" target="_blank"><i class="fab fa-instagram"></i></a>
+        </div>
+        <p>© 2024 Your Travel Website. All Rights Reserved.</p>
+    </footer>
+
+    <!-- Font Awesome for icons -->
+    <script src="https://kit.fontawesome.com/6558443b63.js" crossorigin="anonymous"></script>
+
+    <script>
+        // Open and Close Destination Dialog
+        function openDestinationDialog() {
+            document.getElementById('destination-dialog').classList.remove('hidden');
+        }
+
+        function closeDestinationDialog() {
+            document.getElementById('destination-dialog').classList.add('hidden');
+        }
+
+        // Destination form handling
+        document.getElementById('destinationForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const destinationName = document.getElementById('destination_name').value;
+
+            const formData = new FormData();
+            formData.append('destination_Name', destinationName);
+
+            fetch('adddestination.php?action=add', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Destination added successfully!');
+                    document.getElementById('destinationForm').reset();
+                    closeDestinationDialog();
+                    fetchDestinations();
+                } else {
+                    alert('Failed to add destination: ' + data.message);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+
+        // Fetch Destinations from the server
+        function fetchDestinations() {
+            fetch('adddestination.php?action=fetch')
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.getElementById('destination-table-body');
+                    tableBody.innerHTML = '';
+                    data.forEach((destination, index) => {
+                        const row = `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${destination.destination_name}</td>
+                                <td>
+                                    <button onclick="updateDestination(${destination.id}, '${destination.destination_name}')">Update</button>
+                                    <button onclick="deleteDestination(${destination.id})">Delete</button>
+                                </td>
+                            </tr>`;
+                        tableBody.insertAdjacentHTML('beforeend', row);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Open Hotel Dialog and fetch data if necessary
+        function openHotelDialog(hotelId = null) {
+            if (hotelId) {
+                // Fetch hotel details for updating
+                fetch(`manage_hotels.php?action=getHotel&id=${hotelId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data) {
+                            document.getElementById('hotel-id').value = data.id;
+                            document.getElementById('hotel_name').value = data.hotel_name;
+                            document.getElementById('address').value = data.address;
+                            document.getElementById('price').value = data.price;
+                            document.getElementById('city').value = data.city_id;
+                        }
+                    })
+                    .catch(error => console.error('Error fetching hotel data:', error));
+            } else {
+                document.getElementById('hotel-id').value = '';
+                document.getElementById('hotel_name').value = '';
+                document.getElementById('address').value = '';
+                document.getElementById('price').value = '';
+                document.getElementById('city').value = '';
+            }
+
+            document.getElementById('hotel-dialog').classList.remove('hidden');
+            fetchCities();
+        }
+
+        // Close Hotel Dialog
+        function closeHotelDialog() {
+            document.getElementById('hotel-dialog').classList.add('hidden');
+        }
+
+        // Fetch Cities for the dropdown
+        function fetchCities() {
+            fetch('fetch_cities.php')
+                .then(response => response.json())
+                .then(data => {
+                    const citySelect = document.getElementById('city');
+                    citySelect.innerHTML = '<option value="">Select a city</option>';
+                    data.forEach(city => {
+                        const option = document.createElement('option');
+                        option.value = city.id;
+                        option.textContent = city.destination_name;
+                        citySelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error fetching cities:', error));
+        }
+
+        // Hotel form handling (add/update)
+        document.getElementById('hotelForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const hotelId = document.getElementById('hotel-id').value;
+            const hotelData = new FormData(this);
+
+            let url = 'manage_hotels.php';
+            let method = 'POST';
+
+            if (hotelId) {
+                hotelData.append('id', hotelId);
+                hotelData.append('action', 'update');
+            } else {
+                hotelData.append('action', 'add');
+            }
+
+            fetch(url, {
+                method: method,
+                body: hotelData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Hotel saved successfully!');
+                    fetchHotels();
+                    closeHotelDialog();
+                } else {
+                    alert('Failed to save hotel: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error saving hotel:', error);
+                alert('An error occurred while saving the hotel.');
+            });
+        });
+
+        // Fetch Hotels from the database
+        function fetchHotels() {
+            fetch('manage_hotels.php?action=fetch')
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.querySelector('.hotel-table tbody');
+                    tableBody.innerHTML = '';
+
+                    data.forEach((hotel, index) => {
+                        const row = `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${hotel.hotel_name}</td>
+                                <td>${hotel.address}</td>
+                                <td>
+                                    <button onclick="openHotelDialog(${hotel.id})">Update</button>
+                                    <button onclick="deleteHotel(${hotel.id})">Delete</button>
+                                </td>
+                            </tr>`;
+                        tableBody.insertAdjacentHTML('beforeend', row);
+                    });
+                })
+                .catch(error => console.error('Error fetching hotels:', error));
+        }
+
+        // Delete Hotel
+        function deleteHotel(hotelId) {
+            if (confirm('Are you sure you want to delete this hotel?')) {
+                const formData = new FormData();
+                formData.append('id', hotelId);
+                formData.append('action', 'delete');
+
+                fetch('manage_hotels.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Hotel deleted successfully!');
+                        fetchHotels();
+                    } else {
+                        alert('Failed to delete hotel: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error deleting hotel:', error);
+                    alert('An error occurred while deleting the hotel.');
+                });
+            }
+        }
+    </script>
+</body>
+</html>
